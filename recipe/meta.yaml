@@ -1,9 +1,8 @@
 {% set name = "nbbrowserpdf" %}
 {% set version = "0.2.0" %}
 {% set compress_type = "tar.gz" %}
-{% set hash_type = "sha256" %}
 {% set hash = "e21dbf822097a22060bcffeee380df7d56443ed2e433843093fa3d56f7584990" %}
-{% set build = 2 %}
+{% set build = 3 %}
 
 package:
   name: {{ name|lower }}
@@ -11,28 +10,30 @@ package:
 
 source:
   fn: {{ name }}-{{ version }}.{{ compress_type }}
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ compress_type }}
-  {{ hash_type }}: {{ hash }}
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.{{ compress_type }}
+  sha256: {{ hash }}
 
 build:
   noarch: python
   entry_points:
       - nbbrowserpdf = nbbrowserpdf.export:main
   number: {{ build }}
-  script: python -m pip install --no-deps --ignore-installed .
+  script: {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
   host:
     - pip
-    - python
+    - python {{ python_min }}
     - setuptools
 
   run:
-    - python
+    - python >={{ python_min }}
     - pypdf2
     - ghost.py
 
 test:
+  requires:
+    - python {{ python_min }}
   imports:
     - nbbrowserpdf
 
